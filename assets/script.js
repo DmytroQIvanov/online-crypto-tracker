@@ -18,8 +18,9 @@ async function check() {
     }, 900);
   }, 1000);
 
-  let previorValue = "0";
-
+  let previousValue = "0";
+  let bufer = 0;
+  let different = 0;
   function currentDate() {
     let currentdata = new Date();
     return currentdata.getHours() + ":" + currentdata.getMinutes();
@@ -31,13 +32,19 @@ async function check() {
 
       let data = await responce.json();
 
-      if (data.USD.last != previorValue) {
-        previorValue = data.USD.last;
+      if (data.USD.last != bufer) {
+        previousValue = bufer;
+        bufer = data.USD.last;
+        data.USD.last / 100;
       }
-      console.log(previorValue);
+      console.log(previousValue);
       document.getElementById("time").innerHTML = "Time: " + currentDate();
       document.getElementById("usd").innerHTML =
-        "USD: " + data.USD.last + ` ${data.USD.symbol}`;
+        "USD: " +
+        data.USD.last +
+        ` ${data.USD.symbol}  //    ${
+          (data.USD.last - previousValue) / (previousValue / 100)
+        }`;
       document.getElementById(
         "gbp"
       ).innerHTML = `GBP: ${data.GBP.last} ${data.GBP.symbol}`;
